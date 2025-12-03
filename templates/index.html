@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block content %}
+	<br>
+	<div class="w3-row-padding">
+		<div class="w3-half">
+			<div class="w3-container w3-padding w3-card-4">
+				<center>
+				<div id="mycamera" style="width:320px;height:240px;border:1px solid #c0c0c0"/>
+				</center>
+				<p><label>IDNO</label><input type="number" id="idno" class="w3-input"></p>
+				<p><label>LASTNAME</label><input type="text" id="lastname" class="w3-input"></p>
+				<p><label>FIRSTNAME</label><input type="text" id="firstname" class="w3-input"></p>
+				<p><label>COURSE</label>
+					<select id="course" class="w3-select">
+						<option value="BSIT">INFORMATION TECHNOLOGY</option>
+						<option value="BSCS">COMPUTER SCIENCE</option>
+						<option value="BSCJ">CRIMINOLOGY</option>
+					</select>
+				</p>
+				<p><label>LEVEL</label>
+					<select id="level" class="w3-select">
+						<option value="1">FIRST YEAR</option>
+						<option value="2">SECOND YEAR</option>
+						<option value="3">THIRD YEAR</option>
+						<option value="4">FOURTH YEAR</option>
+					</select>
+				</p>
+				<p class="w3-right">
+					<button class="w3-button w3-blue" onclick="takepicture()">SNAP</button>
+					<button class="w3-button w3-amber">CANCEL</button>
+				</p>
+			</div>
+			
+		</div>
+		<div class="w3-half">
+			<div class="w3-container w3-padding w3-card-4">
+				<center>
+					<div id="mypicture">
+				</center>
+				<br>
+				<table class="w3-table-all">
+					<tr><td>IDNO</td><td> <div id="myidno"/> </td></tr>
+					<tr><td>LASTNAME</td><td> <div id="mylastname"/> </td></tr>
+					<tr><td>FIRSTNAME</td><td> <div id="myfirstname"/> </td></tr>
+					<tr><td>COURSE</td><td> <div id="mycourse"/> </td></tr>
+					<tr><td>LEVEL</td><td> <div id="mylevel"/> </td></tr>
+				</table>
+				<br>
+				<center>
+					<div id="myqrcode">
+				</center>
+				<p class="w3-right">
+					<button class="w3-button w3-blue">SAVE</button>
+					
+				</p>
+			</div>
+		</div>
+	</div>
+	<script src="{{ url_for('static',filename='js/webcam.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='js/qrcode.min.js') }}"></script>
+	<script>
+		Webcam.set({
+			width:320,
+			height:240,
+			dest_width:320,
+			dest_height:240,
+			image_format:'jpeg',
+			jpeg_quality:90
+		});
+		Webcam.attach("#mycamera")
+		//
+		function takepicture(){
+				var idno = document.getElementById('idno').value;
+				Webcam.snap( function(data_uri) {
+					document.getElementById('mypicture').innerHTML = '<img id="imageprev" src="'+data_uri+'"/>';
+					document.getElementById('myidno').innerHTML = document.getElementById('idno').value;
+					document.getElementById('mylastname').innerHTML = document.getElementById('lastname').value;
+					document.getElementById('myfirstname').innerHTML = document.getElementById('firstname').value;
+					document.getElementById('mycourse').innerHTML = document.getElementById('course').value;
+					document.getElementById('mylevel').innerHTML = document.getElementById('level').value;
+				} );
+				
+				var qrcode = new QRCode(document.getElementById("myqrcode"), {
+				  text: idno,
+				  width: 128,
+				  height: 128,
+				  colorDark: "#000000",
+				  colorLight: "#ffffff",
+				  correctLevel: QRCode.CorrectLevel.H
+				});
+				
+				
+		}
+	
+	</script>
+	
+{% endblock %}
